@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <link rel="stylesheet" href="css/style.css">
+
+  <title>Health Vision</title>
+</head>
+
+<body>
+
+  <center>
+    <div class="container">
+
+      <!-- LOGO / MARCA -->
+      <div class="logo-area">
+        <img
+          src="img/logo-health-vision.png"
+          alt="Health Vision"
+          class="logo"
+        >
+
+        <div class="logo-subtitle">
+          SISTEMA HOSPITALAR
+        </div>
+      </div>
+
+      <!-- LOGIN -->
+      <div class="login-area">
+
+        <input
+          id="usuario"
+          type="text"
+          placeholder="Usuário"
+          autocomplete="username"
+        >
+
+        <input
+          id="senha"
+          type="password"
+          placeholder="Senha"
+          autocomplete="current-password"
+        >
+
+        <button onclick="login()">
+          Entrar
+        </button>
+
+      </div>
+
+    </div>
+  </center>
+
+  <script>
+    function login() {
+      fetch("http://localhost:3000/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          usuario: usuario.value,
+          senha: senha.value
+        })
+      })
+      .then(r => r.json())
+      .then(data => {
+
+        if (data.tipo === "triagem") {
+          location.href = "triagem.html";
+        }
+
+        if (data.tipo === "medico") {
+          location.href = "medico.html";
+        }
+
+        if (data.tipo === "atendimento") {
+          location.href = "atendimento.html";
+        }
+
+      });
+    }
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,675 @@
+/* =========================================================
+   Health Vision
+   IDENTIDADE VISUAL — AZUL SUAVE
+   ========================================================= */
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+
+  font-family: "Segoe UI", Arial, Helvetica, sans-serif;
+
+  /* Azul muito suave em vez de cinza */
+  background:
+    linear-gradient(
+      135deg,
+      #eaf6fa 0%,
+      #f4fbfd 45%,
+      #e1f2f7 100%
+    );
+
+  color: #294756;
+}
+
+
+/* =========================================================
+   CONTAINER
+   ========================================================= */
+
+.container {
+  width: 92%;
+  max-width: 1000px;
+
+  margin: 40px auto;
+  padding: 34px;
+
+  background: rgba(255, 255, 255, 0.94);
+
+  border: 1px solid #cce8f0;
+  border-radius: 22px;
+
+  box-shadow:
+    0 15px 40px rgba(23, 107, 135, 0.10),
+    0 3px 10px rgba(23, 107, 135, 0.05);
+
+  position: relative;
+  overflow: hidden;
+
+  animation: aparecer 0.45s ease;
+}
+
+
+/* Faixa decorativa superior */
+
+.container::before {
+  content: "";
+
+  position: absolute;
+  top: 0;
+  left: 0;
+
+  width: 100%;
+  height: 5px;
+
+  background:
+    linear-gradient(
+      90deg,
+      #176b87,
+      #3fa7c5,
+      #8fd3e5
+    );
+}
+
+
+/* =========================================================
+   TÍTULOS
+   ========================================================= */
+
+h1,
+h2,
+h3 {
+  color: #176b87;
+}
+
+h2 {
+  font-size: 28px;
+  font-weight: 700;
+
+  margin: 0 0 30px;
+
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+
+/* Pequeno detalhe azul */
+
+h2::after {
+  content: "";
+
+  width: 42px;
+  height: 4px;
+
+  margin-left: 5px;
+
+  background: #58b9d2;
+
+  border-radius: 20px;
+
+  box-shadow:
+    0 2px 6px rgba(63, 167, 197, 0.25);
+}
+
+
+h3 {
+  font-size: 20px;
+  margin-bottom: 15px;
+}
+
+
+/* =========================================================
+   FORMULÁRIOS
+   ========================================================= */
+
+input,
+select,
+textarea {
+  width: 100%;
+
+  padding: 14px 16px;
+  margin-top: 12px;
+
+  background: #f5fbfd;
+
+  border: 1px solid #c8e2ea;
+  border-radius: 11px;
+
+  color: #294756;
+
+  font-family: inherit;
+  font-size: 16px;
+
+  outline: none;
+
+  transition:
+    border-color 0.2s ease,
+    background 0.2s ease,
+    box-shadow 0.2s ease,
+    transform 0.2s ease;
+}
+
+
+input::placeholder,
+textarea::placeholder {
+  color: #78929d;
+}
+
+
+input:hover,
+select:hover,
+textarea:hover {
+  border-color: #9dcedb;
+}
+
+
+input:focus,
+select:focus,
+textarea:focus {
+  background: #ffffff;
+
+  border-color: #3fa7c5;
+
+  box-shadow:
+    0 0 0 4px rgba(63, 167, 197, 0.12);
+}
+
+
+input[readonly] {
+  background: #e8f4f8;
+  color: #416675;
+  cursor: not-allowed;
+}
+
+
+select {
+  cursor: pointer;
+}
+
+
+textarea {
+  min-height: 120px;
+  resize: vertical;
+}
+
+
+/* =========================================================
+   INPUT DE ARQUIVO
+   ========================================================= */
+
+input[type="file"] {
+  padding: 11px;
+
+  background: #eaf6fa;
+
+  cursor: pointer;
+}
+
+
+/* =========================================================
+   BOTÕES
+   ========================================================= */
+
+button {
+  width: 100%;
+
+  padding: 14px 20px;
+  margin-top: 18px;
+
+  border: none;
+  border-radius: 11px;
+
+  background:
+    linear-gradient(
+      135deg,
+      #3fa7c5,
+      #247f9e
+    );
+
+  color: #ffffff;
+
+  font-family: inherit;
+  font-size: 16px;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  box-shadow:
+    0 7px 18px rgba(36, 127, 158, 0.20);
+
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease,
+    filter 0.2s ease;
+}
+
+
+button:hover {
+  transform: translateY(-2px);
+
+  filter: brightness(1.04);
+
+  box-shadow:
+    0 10px 22px rgba(36, 127, 158, 0.27);
+}
+
+
+button:active {
+  transform: translateY(0);
+}
+
+
+button:focus-visible {
+  outline: 3px solid rgba(63, 167, 197, 0.25);
+  outline-offset: 3px;
+}
+
+
+/* =========================================================
+   CARDS
+   ========================================================= */
+
+.card {
+  position: relative;
+
+  padding: 22px;
+
+  margin: 18px 0;
+
+  background:
+    linear-gradient(
+      145deg,
+      #ffffff,
+      #f4fbfd
+    );
+
+  border: 1px solid #cce6ed;
+
+  border-radius: 15px;
+
+  box-shadow:
+    0 5px 16px rgba(23, 107, 135, 0.07);
+
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease,
+    border-color 0.2s ease;
+}
+
+
+.card::before {
+  content: "";
+
+  position: absolute;
+
+  left: 0;
+  top: 18px;
+  bottom: 18px;
+
+  width: 4px;
+
+  background: #5bbbd3;
+
+  border-radius: 0 5px 5px 0;
+}
+
+
+.card:hover {
+  transform: translateY(-3px);
+
+  border-color: #a8d6e2;
+
+  box-shadow:
+    0 10px 25px rgba(23, 107, 135, 0.11);
+}
+
+
+.card h3 {
+  color: #176b87;
+  margin-bottom: 14px;
+}
+
+
+.card p {
+  margin: 10px 0;
+
+  color: #58717d;
+
+  line-height: 1.6;
+}
+
+
+.card b {
+  color: #315766;
+}
+
+
+/* =========================================================
+   STATUS DE RISCO
+   ========================================================= */
+
+.verde,
+.amarelo,
+.vermelho {
+  display: inline-flex;
+
+  align-items: center;
+  justify-content: center;
+
+  min-width: 90px;
+
+  padding: 7px 15px;
+
+  border-radius: 30px;
+
+  font-size: 13px;
+  font-weight: 700;
+
+  text-transform: uppercase;
+
+  letter-spacing: 0.5px;
+}
+
+
+/* VERDE */
+
+.verde {
+  background: #e4f7ef;
+  color: #168457;
+
+  border: 1px solid #b8e6d0;
+}
+
+
+/* AMARELO */
+
+.amarelo {
+  background: #fff7d8;
+  color: #967300;
+
+  border: 1px solid #efdc8e;
+}
+
+
+/* VERMELHO */
+
+.vermelho {
+  background: #fde8e9;
+  color: #c0392b;
+
+  border: 1px solid #f1c1c4;
+}
+
+
+/* =========================================================
+   RESULTADO DA TRIAGEM
+   ========================================================= */
+
+#resultado {
+  margin-top: 22px;
+
+  padding: 17px;
+
+  border-radius: 12px;
+
+  font-size: 17px;
+  font-weight: 700;
+
+  text-align: center;
+
+  transition: all 0.25s ease;
+}
+
+
+#resultado.verde {
+  background: #e4f7ef;
+  color: #168457;
+  border: 1px solid #b8e6d0;
+}
+
+
+#resultado.amarelo {
+  background: #fff7d8;
+  color: #967300;
+  border: 1px solid #efdc8e;
+}
+
+
+#resultado.vermelho {
+  background: #fde8e9;
+  color: #c0392b;
+  border: 1px solid #f1c1c4;
+}
+
+
+/* =========================================================
+   DIVISÓRIA
+   ========================================================= */
+
+hr {
+  margin: 35px 0;
+
+  border: none;
+
+  height: 1px;
+
+  background:
+    linear-gradient(
+      90deg,
+      transparent,
+      #b9dce6,
+      transparent
+    );
+}
+
+
+/* =========================================================
+   LISTA DE MEDICAÇÕES
+   ========================================================= */
+
+#listaMedicacoes {
+  margin-top: 15px;
+}
+
+
+/* =========================================================
+   TRIAGENS
+   ========================================================= */
+
+#triagens {
+  margin-top: 10px;
+}
+
+
+/* =========================================================
+   ANIMAÇÃO
+   ========================================================= */
+
+@keyframes aparecer {
+
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+}
+
+
+/* =========================================================
+   RESPONSIVIDADE
+   ========================================================= */
+
+@media (max-width: 700px) {
+
+  .container {
+    width: 94%;
+
+    margin: 20px auto;
+
+    padding: 23px;
+
+    border-radius: 17px;
+  }
+
+
+  h2 {
+    font-size: 23px;
+  }
+
+
+  h3 {
+    font-size: 18px;
+  }
+
+
+  input,
+  select,
+  textarea,
+  button {
+    font-size: 15px;
+  }
+
+
+  .card {
+    padding: 18px;
+  }
+
+}
+
+
+/* =========================================================
+   CELULARES PEQUENOS
+   ========================================================= */
+
+@media (max-width: 420px) {
+
+  .container {
+    width: 96%;
+
+    padding: 19px;
+  }
+
+
+  h2 {
+    font-size: 21px;
+  }
+
+
+  .verde,
+  .amarelo,
+  .vermelho {
+    min-width: 80px;
+
+    padding: 6px 11px;
+
+    font-size: 12px;
+  }
+
+}
+
+/* =========================================================
+   LOGO HEALTH VISION
+   ========================================================= */
+
+.logo-area {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  margin-bottom: 28px;
+}
+
+.logo {
+  width: 190px;
+  max-width: 70%;
+  height: auto;
+
+  display: block;
+
+  object-fit: contain;
+
+  filter:
+    drop-shadow(0 6px 12px rgba(23, 107, 135, 0.12));
+
+  transition:
+    transform 0.25s ease,
+    filter 0.25s ease;
+}
+
+.logo:hover {
+  transform: translateY(-2px);
+
+  filter:
+    drop-shadow(0 9px 18px rgba(23, 107, 135, 0.17));
+}
+
+.logo-subtitle {
+  margin-top: 10px;
+
+  color: #3f7f91;
+
+  font-size: 12px;
+  font-weight: 700;
+
+  letter-spacing: 3px;
+
+  text-align: center;
+}
+
+
+/* =========================================================
+   ÁREA DE LOGIN
+   ========================================================= */
+
+.login-area {
+  width: 100%;
+  max-width: 430px;
+
+  margin: 0 auto;
+}
+
+
+/* =========================================================
+   RESPONSIVIDADE DA LOGO
+   ========================================================= */
+
+@media (max-width: 700px) {
+
+  .logo {
+    width: 165px;
+  }
+
+  .logo-subtitle {
+    font-size: 10px;
+    letter-spacing: 2.5px;
+  }
+
+}
+
+
+@media (max-width: 420px) {
+
+  .logo {
+    width: 145px;
+  }
+
+  .logo-subtitle {
+    font-size: 9px;
+    letter-spacing: 2px;
+  }
+
+}
