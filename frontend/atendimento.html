@@ -1,36 +1,220 @@
 <!DOCTYPE html>
-<html>
-<head><link rel="stylesheet" href="css/style.css"></head>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <link rel="stylesheet" href="css/style.css">
+
+  <title>Atendimento - Health Vision</title>
+</head>
+
 <body>
+
 <div class="container">
-<h2>Atendimento</h2>
 
-<input id="nome" placeholder="Nome">
-<input id="cpf" placeholder="CPF">
+  <!-- LOGO -->
+  <div class="logo-area">
+    <img src="img/logo.png" alt="Health Vision" class="logo">
+    <div class="logo-subtitle">SAÚDE E CUIDADO</div>
+  </div>
 
-<select id="tipo">
-  <option>Convenio</option>
-  <option>Particular</option>
-</select>
+  <h2>Atendimento</h2>
 
-<input type="file" id="foto">
+  <!-- DADOS PESSOAIS -->
+  <div class="card">
 
-<button onclick="cadastrar()">Cadastrar</button>
+    <h3>Dados pessoais</h3>
+
+    <input
+      type="text"
+      id="nome"
+      placeholder="Nome completo"
+      required
+    >
+
+    <input
+      type="text"
+      id="documento"
+      placeholder="CPF, RG ou outro documento"
+      required
+    >
+
+    <input
+      type="date"
+      id="dataNascimento"
+      required
+    >
+
+    <select id="sexo" required>
+      <option value="">Selecione o sexo</option>
+      <option value="Feminino">Feminino</option>
+      <option value="Masculino">Masculino</option>
+      <option value="Outro">Outro</option>
+      <option value="Nao informado">Prefiro não informar</option>
+    </select>
+
+    <input
+      type="text"
+      id="nomeMae"
+      placeholder="Nome da mãe"
+      required
+    >
+
+    <select id="estadoCivil">
+      <option value="">Estado civil</option>
+      <option value="Solteiro(a)">Solteiro(a)</option>
+      <option value="Casado(a)">Casado(a)</option>
+      <option value="Uniao estavel">União estável</option>
+      <option value="Divorciado(a)">Divorciado(a)</option>
+      <option value="Viuvo(a)">Viúvo(a)</option>
+      <option value="Separado(a)">Separado(a)</option>
+      <option value="Outro">Outro</option>
+    </select>
+
+  </div>
+
+
+  <!-- CONTATO E ENDEREÇO -->
+  <div class="card">
+
+    <h3>Contato e endereço</h3>
+
+    <input
+      type="text"
+      id="endereco"
+      placeholder="Endereço completo"
+    >
+
+    <input
+      type="tel"
+      id="telefone"
+      placeholder="Telefone"
+    >
+
+    <input
+      type="email"
+      id="email"
+      placeholder="E-mail"
+    >
+
+  </div>
+
+
+  <!-- CONTATO DE EMERGÊNCIA -->
+  <div class="card">
+
+    <h3>Contato de emergência</h3>
+
+    <input
+      type="text"
+      id="contatoEmergencia"
+      placeholder="Nome do contato de emergência"
+    >
+
+    <input
+      type="tel"
+      id="telefoneEmergencia"
+      placeholder="Telefone do contato de emergência"
+    >
+
+  </div>
+
+
+  <!-- CONVÊNIO -->
+  <div class="card">
+
+    <h3>Informações do atendimento</h3>
+
+    <select id="tipo">
+      <option value="Convenio">Convênio</option>
+      <option value="Particular">Particular</option>
+    </select>
+
+    <input
+      type="file"
+      id="foto"
+      accept="image/*"
+    >
+
+  </div>
+
+
+  <button onclick="cadastrar()">
+    Cadastrar
+  </button>
+
 </div>
 
+
 <script>
-function cadastrar(){
- fetch("http://localhost:3000/atendimento",{
-  method:"POST",
-  headers:{"Content-Type":"application/json"},
-  body: JSON.stringify({
-    nome: nome.value,
-    cpf: cpf.value,
-    tipo: tipo.value
+
+function cadastrar() {
+
+  const dados = {
+    nome: document.getElementById("nome").value,
+    documento: document.getElementById("documento").value,
+    dataNascimento: document.getElementById("dataNascimento").value,
+    sexo: document.getElementById("sexo").value,
+    nomeMae: document.getElementById("nomeMae").value,
+    estadoCivil: document.getElementById("estadoCivil").value,
+
+    endereco: document.getElementById("endereco").value,
+    telefone: document.getElementById("telefone").value,
+    email: document.getElementById("email").value,
+
+    contatoEmergencia: document.getElementById("contatoEmergencia").value,
+    telefoneEmergencia: document.getElementById("telefoneEmergencia").value,
+
+    tipo: document.getElementById("tipo").value
+  };
+
+  if (
+    !dados.nome ||
+    !dados.documento ||
+    !dados.dataNascimento ||
+    !dados.sexo ||
+    !dados.nomeMae
+  ) {
+    alert("Preencha os campos obrigatórios.");
+    return;
+  }
+
+  fetch("http://localhost:3000/atendimento", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify(dados)
   })
- });
- alert("Paciente enviado para triagem");
+  .then(response => {
+
+    if (!response.ok) {
+      throw new Error("Erro ao cadastrar paciente.");
+    }
+
+    return response.json();
+
+  })
+  .then(data => {
+
+    alert("Paciente enviado para triagem.");
+
+  })
+  .catch(error => {
+
+    console.error(error);
+
+    alert(
+      "Não foi possível enviar o paciente. Verifique se o servidor está funcionando."
+    );
+
+  });
+
 }
+
 </script>
+
 </body>
 </html>
