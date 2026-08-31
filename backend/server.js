@@ -55,18 +55,42 @@ app.post("/atendimento", (req, res) => {
 
   const paciente = {
     id: Date.now(),
+
+    // DADOS PESSOAIS
     nome: req.body.nome,
-    cpf: req.body.cpf,
+    documento: req.body.documento,
+
+    // Mantemos cpf para não quebrar partes antigas do sistema
+    cpf: req.body.documento,
+
+    dataNascimento: req.body.dataNascimento,
+    sexo: req.body.sexo,
+    nomeMae: req.body.nomeMae,
+    estadoCivil: req.body.estadoCivil,
+
+    // CONTATO E ENDEREÇO
+    endereco: req.body.endereco,
+    telefone: req.body.telefone,
+    email: req.body.email,
+
+    // CONTATO DE EMERGÊNCIA
+    contatoEmergencia: req.body.contatoEmergencia,
+    telefoneEmergencia: req.body.telefoneEmergencia,
+
+    // ATENDIMENTO
     tipo: req.body.tipo,
+
+    // CONTROLE DO SISTEMA
     status: "triagem",
-    createdAt: new Date()
+    createdAt: new Date().toISOString()
   };
 
   db.pacientes.push(paciente);
   writeDB(db);
 
-  res.json(paciente);
+  res.status(201).json(paciente);
 });
+
 
 // LISTAR PACIENTES (triagem busca quem foi cadastrado no atendimento)
 app.get("/pacientes", (req, res) => {
