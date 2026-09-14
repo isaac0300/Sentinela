@@ -311,130 +311,198 @@
 
     /* CARREGAR PACIENTES */
     function carregarPacientes() {
-      fetch("/pacientes")
-        .then(response => {
-          if (!response.ok) {
-            throw new Error("Erro ao buscar pacientes.");
-          }
 
-          return response.json();
+    const div = document.getElementById("fila-pacientes");
+
+    div.innerHTML = `
+        <p style="color:#007bff; text-align:center;">
+            🔄 Buscando pacientes...
+        </p>
+    `;
+
+    fetch("/pacientes")
+        .then(response => {
+
+            console.log("STATUS /pacientes:", response.status);
+
+            if (!response.ok) {
+                throw new Error("HTTP " + response.status);
+            }
+
+            return response.json();
         })
         .then(pacientes => {
-          const div = document.getElementById("fila-pacientes");
 
-          const fila = pacientes.filter(
-            paciente => paciente.status === "triagem"
-          );
+            console.log("PACIENTES RECEBIDOS:", pacientes);
+            console.log("QUANTIDADE:", pacientes.length);
 
-          if (fila.length === 0) {
-            div.innerHTML = `
-              <p style="color:#888; text-align:center; padding:15px;">
-                Nenhum paciente aguardando triagem.
-              </p>
-            `;
-            return;
-          }
+            if (!Array.isArray(pacientes)) {
+                throw new Error("A API não retornou uma lista de pacientes.");
+            }
 
-          div.innerHTML = "";
+            /*
+             * TESTE:
+             * primeiro mostramos TODOS os pacientes.
+             * Depois vamos voltar a filtrar por status.
+             */
 
-          fila.forEach(paciente => {
-            const item = document.createElement("div");
-            item.className = "fila-item";
+            const fila = pacientes;
 
-            item.innerHTML = `
-              <div class="fila-topo">
-                <div>
-                  <strong>${escaparHTML(paciente.nome)}</strong>
-                </div>
+            if (fila.length === 0) {
 
-                <div class="fila-acoes">
-                  <button
-                    class="btn-atender"
-                    onclick="selecionarPaciente(${paciente.id})"
-                  >
-                    👤 Atender
-                  </button>
+                div.innerHTML = `
+                    <p style="color:#888; text-align:center; padding:15px;">
+                        Nenhum paciente encontrado na API.
+                    </p>
+                `;
 
-                  <button
-                    class="btn-tv"
-                    onclick="chamarNaTV('${escaparHTML(paciente.nome)}')"
-                  >
-                    📺 Chamar na TV
-                  </button>
-                </div>
-              </div>
+                return;
+            }
 
-              <div class="dados-paciente">
-                <div class="dado">
-                  <b>Documento:</b>
-                  ${escaparHTML(paciente.documento || paciente.cpf || "Não informado")}
-                </div>
+            div.innerHTML = "";
 
-                <div class="dado">
-                  <b>Nascimento:</b>
-                  ${formatarData(paciente.dataNascimento)}
-                </div>
+            fila.forEach(paciente => {
 
-                <div class="dado">
-                  <b>Sexo:</b>
-                  ${escaparHTML(paciente.sexo || "Não informado")}
-                </div>
+                const item = document.createElement("div");
 
-                <div class="dado">
-                  <b>Nome da mãe:</b>
-                  ${escaparHTML(paciente.nomeMae || "Não informado")}
-                </div>
+                item.className = "fila-item";
 
-                <div class="dado">
-                  <b>Estado civil:</b>
-                  ${escaparHTML(paciente.estadoCivil || "Não informado")}
-                </div>
+                item.innerHTML = `
+                    <div class="fila-topo">
 
-                <div class="dado">
-                  <b>Endereço:</b>
-                  ${escaparHTML(paciente.endereco || "Não informado")}
-                </div>
+                        <div>
+                            <strong>
+                                ${escaparHTML(paciente.nome || "Sem nome")}
+                            </strong>
 
-                <div class="dado">
-                  <b>Telefone:</b>
-                  ${escaparHTML(paciente.telefone || "Não informado")}
-                </div>
+                            <div style="
+                                margin-top:5px;
+                                font-size:12px;
+                                color:#666;
+                            ">
+                                ID: ${escaparHTML(paciente.id)}
+                                |
+                                Status:
+                                <strong>
+                                    ${escaparHTML(paciente.status || "SEM STATUS")}
+                                </strong>
+                            </div>
+                        </div>
 
-                <div class="dado">
-                  <b>E-mail:</b>
-                  ${escaparHTML(paciente.email || "Não informado")}
-                </div>
+                        <div class="fila-acoes">
 
-                <div class="dado">
-                  <b>Contato de emergência:</b>
-                  ${escaparHTML(paciente.contatoEmergencia || "Não informado")}
-                </div>
+                            <button
+                                class="btn-atender"
+                                onclick="selecionarPaciente(${paciente.id})"
+                            >
+                                👤 Atender
+                            </button>
 
-                <div class="dado">
-                  <b>Telefone emergência:</b>
-                  ${escaparHTML(paciente.telefoneEmergencia || "Não informado")}
-                </div>
+                            <button
+                                class="btn-tv"
+                                onclick="chamarNaTV('${escaparHTML(paciente.nome || "")}')"
+                            >
+                                📺 Chamar na TV
+                            </button>
 
-                <div class="dado">
-                  <b>Tipo de atendimento:</b>
-                  ${escaparHTML(paciente.tipo || "Não informado")}
-                </div>
-              </div>
-            `;
+                        </div>
 
-            div.appendChild(item);
-          });
+                    </div>
+
+                    <div class="dados-paciente">
+
+                        <div class="dado">
+                            <b>Documento:</b>
+                            ${escaparHTML(
+                                paciente.documento ||
+                                paciente.cpf ||
+                                "Não informado"
+                            )}
+                        </div>
+
+                        <div class="dado">
+                            <b>Nascimento:</b>
+                            ${formatarData(paciente.dataNascimento)}
+                        </div>
+
+                        <div class="dado">
+                            <b>Sexo:</b>
+                            ${escaparHTML(paciente.sexo || "Não informado")}
+                        </div>
+
+                        <div class="dado">
+                            <b>Nome da mãe:</b>
+                            ${escaparHTML(paciente.nomeMae || "Não informado")}
+                        </div>
+
+                        <div class="dado">
+                            <b>Estado civil:</b>
+                            ${escaparHTML(paciente.estadoCivil || "Não informado")}
+                        </div>
+
+                        <div class="dado">
+                            <b>Endereço:</b>
+                            ${escaparHTML(paciente.endereco || "Não informado")}
+                        </div>
+
+                        <div class="dado">
+                            <b>Telefone:</b>
+                            ${escaparHTML(paciente.telefone || "Não informado")}
+                        </div>
+
+                        <div class="dado">
+                            <b>E-mail:</b>
+                            ${escaparHTML(paciente.email || "Não informado")}
+                        </div>
+
+                        <div class="dado">
+                            <b>Contato de emergência:</b>
+                            ${escaparHTML(
+                                paciente.contatoEmergencia ||
+                                "Não informado"
+                            )}
+                        </div>
+
+                        <div class="dado">
+                            <b>Telefone emergência:</b>
+                            ${escaparHTML(
+                                paciente.telefoneEmergencia ||
+                                "Não informado"
+                            )}
+                        </div>
+
+                        <div class="dado">
+                            <b>Tipo de atendimento:</b>
+                            ${escaparHTML(paciente.tipo || "Não informado")}
+                        </div>
+
+                    </div>
+                `;
+
+                div.appendChild(item);
+            });
+
         })
         .catch(error => {
-          console.error(error);
 
-          document.getElementById("fila-pacientes").innerHTML = `
-            <p style="color:red; text-align:center;">
-              Erro ao carregar pacientes.
-            </p>
-          `;
+            console.error("ERRO AO CARREGAR PACIENTES:", error);
+
+            div.innerHTML = `
+                <div style="
+                    background:#f8d7da;
+                    color:#721c24;
+                    padding:15px;
+                    border-radius:6px;
+                    text-align:center;
+                ">
+                    <strong>Erro ao carregar pacientes.</strong>
+                    <br><br>
+                    ${escaparHTML(error.message)}
+                </div>
+            `;
         });
-    }
+}
+
 
     /* SELECIONAR PACIENTE */
     function selecionarPaciente(id) {
