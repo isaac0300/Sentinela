@@ -9,6 +9,21 @@
   <link rel="stylesheet" href="css/style.css">
 
   <style>
+    .btn-internacao {
+      background: #6f42c1;
+      color: white;
+      border: none;
+      padding: 8px 14px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 14px;
+      margin-top: 8px;
+}
+
+    .btn-internacao:hover {
+      background: #59339d;
+}
+
     .btn-tv {
       background: #28a745;
       color: white;
@@ -221,25 +236,31 @@
                 </p>
 
                 <div class="botoes-paciente">
-                  <button onclick="selecionar(${index})">
-                    Atender
-                  </button>
+              <button onclick="selecionar(${index})">
+                Atender
+              </button>
 
-                  <button
-                    class="btn-tv"
-                    onclick="chamarNaTV('${nomeSeguro}')"
-                  >
-                    📺 Chamar na TV
-                  </button>
+              <button
+                class="btn-tv"
+                onclick="chamarNaTV('${nomeSeguro}')"
+              >
+                📺 Chamar na TV
+              </button>
 
-                  <button
-                    class="btn-alta"
-                    onclick="abrirAlta(${t.id})"
-                  >
-                    🏥 Dar Alta
-                  </button>
-                </div>
-              </div>
+              <button
+                class="btn-alta"
+                onclick="abrirAlta(${t.id})"
+              >
+                🏥 Dar Alta
+              </button>
+
+              <button
+                class="btn-internacao"
+                onclick="abrirInternacao(${t.id})"
+              >
+                🛏️ Internar
+              </button>
+          </div>
             `;
           });
         })
@@ -393,6 +414,16 @@
           alert("❌ Erro ao salvar consulta.");
         });
     }
+
+    function abrirInternacao(id) {
+  if (!id) {
+    alert("❌ Não foi possível identificar o paciente.");
+    return;
+  }
+
+  window.location.href =
+    `internacao.html?id=${encodeURIComponent(id)}`;
+  }
 
     // Inicialização
     carregar();
