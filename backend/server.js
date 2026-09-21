@@ -146,16 +146,17 @@ app.post("/triagem", (req, res) => {
   }
 
   const triagem = {
-    id: Date.now(),
-    nome: req.body.nome,
-    sintoma: req.body.sintoma,
-    temperatura: req.body.temperatura,
-    alergia: req.body.alergia,
-    observacao: req.body.observacao,
-    risco,
-    status: "aguardando_medico",
-    createdAt: new Date().toISOString()
-  };
+  id: Date.now(),
+  pacienteId: req.body.pacienteId || null,
+  nome: req.body.nome,
+  sintoma: req.body.sintoma,
+  temperatura: req.body.temperatura,
+  alergia: req.body.alergia,
+  observacao: req.body.observacao,
+  risco,
+  status: "aguardando_medico",
+  createdAt: new Date().toISOString()
+};
 
   db.triagens.push(triagem);
   writeDB(db);
