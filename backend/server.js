@@ -21,20 +21,48 @@ function readDB() {
       triagens: [],
       consultas: [],
       altas: [],
+      internacoes: [],
+      leitos: [],
       tv_chamada: null,
       tv_historico: []
     };
   }
 
-  const db = JSON.parse(fs.readFileSync(DB_FILE, "utf8"));
+  const db = JSON.parse(
+    fs.readFileSync(DB_FILE, "utf8")
+  );
 
   if (!db.usuarios) db.usuarios = [];
   if (!db.pacientes) db.pacientes = [];
   if (!db.triagens) db.triagens = [];
   if (!db.consultas) db.consultas = [];
   if (!db.altas) db.altas = [];
-  if (!db.tv_chamada) db.tv_chamada = null;
-  if (!db.tv_historico) db.tv_historico = [];
+  if (!db.internacoes) db.internacoes = [];
+  if (!db.leitos) db.leitos = [];
+
+  if (!db.tv_chamada) {
+    db.tv_chamada = null;
+  }
+
+  if (!db.tv_historico) {
+    db.tv_historico = [];
+  }
+
+  // Cria os leitos iniciais
+  if (db.leitos.length === 0) {
+    db.leitos = [
+      { numero: "01", setor: "Clínica Médica", status: "livre" },
+      { numero: "02", setor: "Clínica Médica", status: "livre" },
+      { numero: "03", setor: "Clínica Médica", status: "livre" },
+      { numero: "04", setor: "Clínica Médica", status: "livre" },
+      { numero: "05", setor: "Clínica Médica", status: "livre" },
+      { numero: "06", setor: "Clínica Médica", status: "livre" },
+      { numero: "07", setor: "Clínica Médica", status: "livre" },
+      { numero: "08", setor: "Clínica Médica", status: "livre" }
+    ];
+
+    writeDB(db);
+  }
 
   return db;
 }
@@ -219,6 +247,14 @@ app.post("/consulta", (req, res) => {
   res.status(201).json(consulta);
 });
 
+// ==================== LEITOS ====================
+
+app.get("/leitos", (req, res) => {
+  const db = readDB();
+
+  res.json(db.leitos);
+});
+
 // ==================== ALTA MÉDICA ====================
 
 app.post("/alta", (req, res) => {
@@ -281,6 +317,121 @@ app.post("/alta", (req, res) => {
     sucesso: true,
     mensagem: "Alta realizada com sucesso.",
     alta
+  });
+});
+
+// ==================== INTERNAÇÃO ====================
+
+app.post("/internacao", (req, res) => {
+  const db = readDB();
+
+  const {
+    id,
+    leito,
+    diagnostico,
+    motivo,
+    observacoes
+  } = req.body;
+
+  if (!id) {
+    return res.status(400).json({
+      erro: "ID do paciente não informado."
+    });
+  }
+
+  if (!leito) {
+    return res.status(400).json({
+      erro: "Leito não informado."
+    });
+  }
+
+  if (!diagnostico) {
+    return res.status(400).json({
+      erro: "Informe o diagnóstico."
+    });
+  }
+
+  if (!motivo) {
+    return res.status(400).json({
+      erro: "Informe o motivo da internação."
+    });
+  }
+
+  const triagem = db.triagens.find(
+    t => String(t.id) === String(id)
+  );
+
+  if (!triagem) {
+    return res.status(404).json({
+      erro: "Paciente não encontrado."
+    });
+  }
+
+  const leitoSelecionado = db.leitos.find(
+    l => String(l.numero) === String(leito)
+  );
+
+  if (!leitoSelecionado) {
+    return res.status(404).json({
+      erro: "Leito não encontrado."
+    });
+  }
+
+  if (leitoSelecionado.status !== "livre") {
+    return res.status(409).json({
+      erro: "Este leito já está ocupado."
+    });
+  }
+
+  const internacao = {
+    id: Date.now(),
+    pacienteId: triagem.id,
+    paciente: triagem.nome,
+    leito: leitoSelecionado.numero,
+    setor: leitoSelecionado.setor,
+    diagnostico,
+    motivo,
+    observacoes: observacoes || "",
+    status: "internado",
+    createdAt: new Date().toISOString()
+  };
+
+  db.internacoes.push(internacao);
+
+  // Ocupa o leito
+  leitoSelecionado.status = "ocupado";
+  leitoSelecionado.pacienteId = triagem.id;
+  leitoSelecionado.paciente = triagem.nome;
+  leitoSelecionado.internacaoId = internacao.id;
+
+  // Atualiza a triagem
+  triagem.status = "internado";
+  triagem.internacaoId = internacao.id;
+  triagem.leito = leitoSelecionado.numero;
+  triagem.internadoEm = internacao.createdAt;
+
+  // Atualiza o paciente original
+  if (triagem.pacienteId) {
+    const paciente = db.pacientes.find(
+      p =>
+        String(p.id) ===
+        String(triagem.pacienteId)
+    );
+
+    if (paciente) {
+      paciente.status = "internado";
+      paciente.internacaoId = internacao.id;
+      paciente.leito = leitoSelecionado.numero;
+      paciente.internadoEm = internacao.createdAt;
+    }
+  }
+
+  writeDB(db);
+
+  res.status(201).json({
+    sucesso: true,
+    mensagem: "Paciente internado com sucesso.",
+    internacao
   });
 });
 
