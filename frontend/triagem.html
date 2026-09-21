@@ -1,74 +1,42 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <title>Triagem - Health Vision</title>
-
     <link rel="stylesheet" href="css/style.css">
 
     <style>
-
-        /* ==============================
-           BOTÕES
-        ============================== */
-
-        .btn-tv {
-            background: #28a745;
+        .btn-tv,
+        .btn-atender,
+        .btn-abrir-tv {
             color: white;
             border: none;
-            padding: 8px 14px;
             border-radius: 5px;
+            padding: 8px 14px;
             cursor: pointer;
             font-size: 14px;
         }
 
-        .btn-tv:hover {
-            background: #1e7e34;
-        }
+        .btn-tv { background: #28a745; }
+        .btn-tv:hover { background: #1e7e34; }
+
+        .btn-atender { background: #007bff; }
+        .btn-atender:hover { background: #0056b3; }
 
         .btn-abrir-tv {
-            display: inline-block;
             background: #17a2b8;
-            color: white;
-            padding: 8px 14px;
-            border-radius: 5px;
-            font-size: 14px;
             text-decoration: none;
-            cursor: pointer;
-            border: none;
         }
 
-        .btn-abrir-tv:hover {
-            background: #117a8b;
-        }
-
-        .btn-atender {
-            background: #007bff;
-            color: white;
-            border: none;
-            padding: 8px 14px;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 14px;
-        }
-
-        .btn-atender:hover {
-            background: #0056b3;
-        }
-
-        /* ==============================
-           FILA DE PACIENTES
-        ============================== */
+        .btn-abrir-tv:hover { background: #117a8b; }
 
         .pacientes-fila {
             margin-bottom: 30px;
-            background: #f0f4ff;
-            border-radius: 8px;
             padding: 16px;
+            background: #f0f4ff;
             border: 1px solid #d0d8f0;
+            border-radius: 8px;
         }
 
         .pacientes-fila h3 {
@@ -80,23 +48,19 @@
             gap: 10px;
         }
 
-        .pacientes-fila h3 span {
+        .pacientes-fila h3 span:last-child {
             font-size: 13px;
             font-weight: normal;
             color: #666;
         }
 
-        /* ==============================
-           ITEM DO PACIENTE
-        ============================== */
-
         .fila-item {
             background: white;
+            border: 1px solid #dce4ff;
             border-radius: 8px;
             padding: 15px;
             margin-bottom: 12px;
-            border: 1px solid #dce4ff;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+            box-shadow: 0 2px 5px rgba(0,0,0,.05);
         }
 
         .fila-topo {
@@ -118,14 +82,14 @@
             flex-wrap: wrap;
         }
 
-        /* ==============================
-           DADOS DO PACIENTE
-        ============================== */
-
-        .dados-paciente {
+        .dados-paciente,
+        .dados-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
             gap: 8px;
+        }
+
+        .dados-paciente {
             background: #f8f9fa;
             padding: 12px;
             border-radius: 6px;
@@ -138,13 +102,7 @@
             padding: 4px;
         }
 
-        .dado b {
-            color: #333;
-        }
-
-        /* ==============================
-           PACIENTE SELECIONADO
-        ============================== */
+        .dado b { color: #333; }
 
         .dados-selecionados {
             background: #eef8ff;
@@ -159,11 +117,7 @@
             color: #176b87;
         }
 
-        .dados-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            gap: 10px;
-        }
+        .dados-grid { gap: 10px; }
 
         .campo-info {
             background: white;
@@ -184,17 +138,13 @@
             word-break: break-word;
         }
 
-        /* ==============================
-           RESULTADO
-        ============================== */
-
         #resultado {
+            display: none;
             margin: 15px 0;
             padding: 12px;
             border-radius: 6px;
             font-weight: bold;
             text-align: center;
-            display: none;
         }
 
         #resultado.verde {
@@ -218,10 +168,6 @@
             border: 1px solid #f5c6cb;
         }
 
-        /* ==============================
-           STATUS
-        ============================== */
-
         .status-triagem {
             display: inline-block;
             margin-top: 5px;
@@ -233,1456 +179,424 @@
             font-weight: bold;
         }
 
-        /* ==============================
-           RESPONSIVO
-        ============================== */
-
         @media (max-width: 700px) {
-
-            .fila-topo {
-                flex-direction: column;
-                align-items: flex-start;
-            }
-
+            .fila-topo,
             .pacientes-fila h3 {
                 flex-direction: column;
                 align-items: flex-start;
             }
 
-            .fila-acoes {
-                width: 100%;
-            }
-
+            .fila-acoes,
             .fila-acoes button {
                 width: 100%;
             }
-
         }
-
     </style>
 </head>
 
 <body>
-
 <div class="container">
 
-    <!-- ==============================
-         CABEÇALHO
-    ============================== -->
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;gap:10px;">
+        <h2 style="margin:0;">🏥 Triagem Hospitalar</h2>
 
-    <div style="
-        display:flex;
-        justify-content:space-between;
-        align-items:center;
-        margin-bottom:20px;
-        gap:10px;
-    ">
-
-        <h2 style="margin:0;">
-            🏥 Triagem Hospitalar
-        </h2>
-
-        <button
-            class="btn-abrir-tv"
-            onclick="window.open('tv.html','_blank')"
-        >
+        <button class="btn-abrir-tv" onclick="window.open('tv.html','_blank')">
             📺 Abrir Tela da TV
         </button>
-
     </div>
 
-
-    <!-- ==============================
-         FILA DE PACIENTES
-    ============================== -->
-
     <div class="pacientes-fila">
-
         <h3>
-
-            <span style="
-                font-size:18px;
-                font-weight:bold;
-                color:#333;
-            ">
-                Pacientes Cadastrados no Atendimento
-            </span>
-
-            <span>
-                Clique em "Atender" para abrir os dados do paciente
-            </span>
-
+            <span>Pacientes Cadastrados no Atendimento</span>
+            <span>Clique em "Atender" para abrir os dados do paciente</span>
         </h3>
 
-
         <div id="fila-pacientes">
-
-            <p style="
-                color:#888;
-                text-align:center;
-            ">
-                Carregando pacientes...
-            </p>
-
+            <p style="color:#888;text-align:center;">Carregando pacientes...</p>
         </div>
-
 
         <button
             onclick="carregarPacientes()"
-            style="
-                margin-top:8px;
-                background:#6c757d;
-                color:white;
-                border:none;
-                padding:6px 12px;
-                border-radius:4px;
-                cursor:pointer;
-                font-size:13px;
-            "
+            style="margin-top:8px;background:#6c757d;color:white;border:none;padding:6px 12px;border-radius:4px;cursor:pointer;font-size:13px;"
         >
             🔄 Atualizar lista
         </button>
-
     </div>
-
 
     <hr>
 
-
-    <!-- ==============================
-         PACIENTE SELECIONADO
-    ============================== -->
-
-    <div
-        id="dados-selecionados"
-        class="dados-selecionados"
-        style="display:none;"
-    >
-
-        <h3>
-            👤 Paciente selecionado
-        </h3>
-
-        <div
-            id="informacoes-paciente"
-            class="dados-grid"
-        ></div>
-
+    <div id="dados-selecionados" class="dados-selecionados" style="display:none;">
+        <h3>👤 Paciente selecionado</h3>
+        <div id="informacoes-paciente" class="dados-grid"></div>
     </div>
 
+    <h3>Formulário de Triagem</h3>
 
-    <!-- ==============================
-         FORMULÁRIO DE TRIAGEM
-    ============================== -->
-
-    <h3>
-        Formulário de Triagem
-    </h3>
-
-
-    <input
-        id="nome"
-        placeholder="Nome do paciente"
-        readonly
-    >
-
+    <input id="nome" placeholder="Nome do paciente" readonly>
 
     <select id="sintoma">
-
-        <option value="">
-            Selecione o sintoma
-        </option>
-
-        <option value="dor_leve">
-            Dor leve
-        </option>
-
-        <option value="resfriado">
-            Resfriado
-        </option>
-
-        <option value="coriza">
-            Coriza
-        </option>
-
-        <option value="tosse">
-            Tosse
-        </option>
-
-        <option value="febre">
-            Febre
-        </option>
-
-        <option value="vomito">
-            Vômito
-        </option>
-
-        <option value="diarreia">
-            Diarreia
-        </option>
-
-        <option value="falta_ar_moderada">
-            Falta de ar moderada
-        </option>
-
-        <option value="falta_ar_grave">
-            Falta de ar grave
-        </option>
-
-        <option value="infarto">
-            Suspeita de infarto
-        </option>
-
-        <option value="avc">
-            Suspeita de AVC
-        </option>
-
-        <option value="convulsao">
-            Convulsão
-        </option>
-
-        <option value="hemorragia">
-            Hemorragia
-        </option>
-
+        <option value="">Selecione o sintoma</option>
+        <option value="dor_leve">Dor leve</option>
+        <option value="resfriado">Resfriado</option>
+        <option value="coriza">Coriza</option>
+        <option value="tosse">Tosse</option>
+        <option value="febre">Febre</option>
+        <option value="vomito">Vômito</option>
+        <option value="diarreia">Diarreia</option>
+        <option value="falta_ar_moderada">Falta de ar moderada</option>
+        <option value="falta_ar_grave">Falta de ar grave</option>
+        <option value="infarto">Suspeita de infarto</option>
+        <option value="avc">Suspeita de AVC</option>
+        <option value="convulsao">Convulsão</option>
+        <option value="hemorragia">Hemorragia</option>
     </select>
 
-
-    <input
-        id="temp"
-        type="number"
-        step="0.1"
-        placeholder="Temperatura"
-    >
-
-
-    <input
-        id="alergia"
-        placeholder="Alergias"
-    >
-
-
-    <textarea
-        id="observacao"
-        placeholder="Observações"
-    ></textarea>
-
+    <input id="temp" type="number" step="0.1" placeholder="Temperatura">
+    <input id="alergia" placeholder="Alergias">
+    <textarea id="observacao" placeholder="Observações"></textarea>
 
     <div id="resultado"></div>
 
-
-    <button onclick="salvar()">
-        Salvar Triagem
-    </button>
-
+    <button onclick="salvar()">Salvar Triagem</button>
 </div>
 
-
 <script>
-
-    /* ==========================================
-       VARIÁVEL DO PACIENTE SELECIONADO
-    ========================================== */
-
-    let pacienteSelecionado = null;
-
-
-    /* ==========================================
-       ESCAPAR HTML
-    ========================================== */
-
-    function escaparHTML(valor) {
-
-        if (
-            valor === null ||
-            valor === undefined
-        ) {
-            return "";
-        }
-
-        return String(valor)
-            .replace(/&/g, "&amp;")
-            .replace(/</g, "&lt;")
-            .replace(/>/g, "&gt;")
-            .replace(/"/g, "&quot;")
-            .replace(/'/g, "&#039;");
-    }
-
-
-    /* ==========================================
-       FORMATAR DATA
-    ========================================== */
-
-    function formatarData(data) {
-
-        if (!data) {
-            return "Não informado";
-        }
-
-        const partes = String(data).split("-");
-
-        if (partes.length === 3) {
-
-            return `${partes[2]}/${partes[1]}/${partes[0]}`;
-
-        }
-
-        return data;
-    }
-
-
-    /* ==========================================
-       CARREGAR PACIENTES
-    ========================================== */
-
-    function carregarPacientes() {
-
-        const div =
-            document.getElementById("fila-pacientes");
-
-
-        div.innerHTML = `
-            <p style="
-                color:#007bff;
-                text-align:center;
-                padding:15px;
-            ">
-                🔄 Buscando pacientes...
-            </p>
-        `;
-
-
-        fetch("/pacientes")
-
-            .then(response => {
-
-                if (!response.ok) {
-
-                    throw new Error(
-                        "Erro HTTP " + response.status
-                    );
-
-                }
-
-                return response.json();
-
-            })
-
-            .then(pacientes => {
-
-                console.log(
-                    "Pacientes recebidos:",
-                    pacientes
-                );
-
-
-                if (!Array.isArray(pacientes)) {
-
-                    throw new Error(
-                        "A API não retornou uma lista de pacientes."
-                    );
-
-                }
-
-
-                /*
-                 * ==================================================
-                 * AQUI ESTÁ A CORREÇÃO PRINCIPAL
-                 * ==================================================
-                 *
-                 * A fila mostra SOMENTE pacientes cujo status
-                 * seja exatamente "triagem".
-                 */
-
-                const fila = pacientes.filter(
-                    paciente =>
-                        String(paciente.status).toLowerCase() === "triagem"
-                );
-
-
-                console.log(
-                    "Pacientes aguardando triagem:",
-                    fila
-                );
-
-
-                /* Nenhum paciente */
-
-                if (fila.length === 0) {
-
-                    div.innerHTML = `
-                        <p style="
-                            color:#888;
-                            text-align:center;
-                            padding:15px;
-                        ">
-                            Nenhum paciente aguardando triagem.
-                        </p>
-                    `;
-
-                    return;
-                }
-
-
-                /* Limpar lista */
-
-                div.innerHTML = "";
-
-
-                /* Criar cada paciente */
-
-                fila.forEach(paciente => {
-
-                    const item =
-                        document.createElement("div");
-
-
-                    item.className =
-                        "fila-item";
-
-
-                    item.innerHTML = `
-
-                        <div class="fila-topo">
-
-                            <div>
-
-                                <strong>
-                                    ${escaparHTML(
-                                        paciente.nome ||
-                                        "Paciente sem nome"
-                                    )}
-                                </strong>
-
-                                <div class="status-triagem">
-                                    🟡 Aguardando triagem
-                                </div>
-
-                            </div>
-
-
-                            <div class="fila-acoes">
-
-                                <button
-                                    class="btn-atender"
-                                    onclick="selecionarPaciente(${Number(paciente.id)})"
-                                >
-                                    👤 Atender
-                                </button>
-
-
-                                <button
-                                    class="btn-tv"
-                                    onclick="chamarNaTV(
-                                        '${escaparHTML(
-                                            paciente.nome || ""
-                                        )}'
-                                    )"
-                                >
-                                    📺 Chamar na TV
-                                </button>
-
-                            </div>
-
-                        </div>
-
-
-                        <div class="dados-paciente">
-
-
-                            <div class="dado">
-
-                                <b>Documento:</b>
-
-                                ${escaparHTML(
-                                    paciente.documento ||
-                                    paciente.cpf ||
-                                    "Não informado"
-                                )}
-
-                            </div>
-
-
-                            <div class="dado">
-
-                                <b>Nascimento:</b>
-
-                                ${formatarData(
-                                    paciente.dataNascimento
-                                )}
-
-                            </div>
-
-
-                            <div class="dado">
-
-                                <b>Sexo:</b>
-
-                                ${escaparHTML(
-                                    paciente.sexo ||
-                                    "Não informado"
-                                )}
-
-                            </div>
-
-
-                            <div class="dado">
-
-                                <b>Nome da mãe:</b>
-
-                                ${escaparHTML(
-                                    paciente.nomeMae ||
-                                    "Não informado"
-                                )}
-
-                            </div>
-
-
-                            <div class="dado">
-
-                                <b>Estado civil:</b>
-
-                                ${escaparHTML(
-                                    paciente.estadoCivil ||
-                                    "Não informado"
-                                )}
-
-                            </div>
-
-
-                            <div class="dado">
-
-                                <b>Endereço:</b>
-
-                                ${escaparHTML(
-                                    paciente.endereco ||
-                                    "Não informado"
-                                )}
-
-                            </div>
-
-
-                            <div class="dado">
-
-                                <b>Telefone:</b>
-
-                                ${escaparHTML(
-                                    paciente.telefone ||
-                                    "Não informado"
-                                )}
-
-                            </div>
-
-
-                            <div class="dado">
-
-                                <b>E-mail:</b>
-
-                                ${escaparHTML(
-                                    paciente.email ||
-                                    "Não informado"
-                                )}
-
-                            </div>
-
-
-                            <div class="dado">
-
-                                <b>Contato de emergência:</b>
-
-                                ${escaparHTML(
-                                    paciente.contatoEmergencia ||
-                                    "Não informado"
-                                )}
-
-                            </div>
-
-
-                            <div class="dado">
-
-                                <b>Telefone emergência:</b>
-
-                                ${escaparHTML(
-                                    paciente.telefoneEmergencia ||
-                                    "Não informado"
-                                )}
-
-                            </div>
-
-
-                            <div class="dado">
-
-                                <b>Tipo de atendimento:</b>
-
-                                ${escaparHTML(
-                                    paciente.tipo ||
-                                    "Não informado"
-                                )}
-
-                            </div>
-
-
-                        </div>
-
-                    `;
-
-
-                    div.appendChild(item);
-
-                });
-
-            })
-
-            .catch(error => {
-
-                console.error(
-                    "Erro ao carregar pacientes:",
-                    error
-                );
-
-
+let pacienteSelecionado = null;
+
+const $ = id => document.getElementById(id);
+
+function escaparHTML(valor) {
+    if (valor == null) return "";
+    return String(valor)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+}
+
+function formatarData(data) {
+    if (!data) return "Não informado";
+
+    const partes = String(data).split("-");
+    return partes.length === 3
+        ? `${partes[2]}/${partes[1]}/${partes[0]}`
+        : data;
+}
+
+function carregarPacientes() {
+    const div = $("fila-pacientes");
+
+    div.innerHTML = `
+        <p style="color:#007bff;text-align:center;padding:15px;">
+            🔄 Buscando pacientes...
+        </p>
+    `;
+
+    fetch("/pacientes")
+        .then(response => {
+            if (!response.ok) throw new Error(`Erro HTTP ${response.status}`);
+            return response.json();
+        })
+        .then(pacientes => {
+            if (!Array.isArray(pacientes)) {
+                throw new Error("A API não retornou uma lista de pacientes.");
+            }
+
+            const fila = pacientes.filter(
+                paciente => String(paciente.status).toLowerCase() === "triagem"
+            );
+
+            if (!fila.length) {
                 div.innerHTML = `
-
-                    <div style="
-                        background:#f8d7da;
-                        color:#721c24;
-                        padding:15px;
-                        border-radius:6px;
-                        text-align:center;
-                    ">
-
-                        <strong>
-                            ❌ Erro ao carregar pacientes
-                        </strong>
-
-                        <br><br>
-
-                        ${escaparHTML(
-                            error.message
-                        )}
-
-                    </div>
-
+                    <p style="color:#888;text-align:center;padding:15px;">
+                        Nenhum paciente aguardando triagem.
+                    </p>
                 `;
-
-            });
-
-    }
-
-
-    /* ==========================================
-       SELECIONAR PACIENTE
-    ========================================== */
-
-    function selecionarPaciente(id) {
-
-        fetch("/pacientes")
-
-            .then(response => {
-
-                if (!response.ok) {
-
-                    throw new Error(
-                        "Erro HTTP " + response.status
-                    );
-
-                }
-
-                return response.json();
-
-            })
-
-            .then(pacientes => {
-
-                const paciente =
-                    pacientes.find(
-                        p =>
-                            Number(p.id) === Number(id)
-                    );
-
-
-                if (!paciente) {
-
-                    alert(
-                        "Paciente não encontrado."
-                    );
-
-                    return;
-                }
-
-
-                /* Guardar paciente */
-
-                pacienteSelecionado =
-                    paciente;
-
-
-                /* Nome */
-
-                document.getElementById(
-                    "nome"
-                ).value =
-                    paciente.nome || "";
-
-
-                /* Alergia */
-
-                document.getElementById(
-                    "alergia"
-                ).value =
-                    paciente.alergia || "";
-
-
-                /* Mostrar dados */
-
-                const box =
-                    document.getElementById(
-                        "dados-selecionados"
-                    );
-
-
-                const info =
-                    document.getElementById(
-                        "informacoes-paciente"
-                    );
-
-
-                info.innerHTML = `
-
-                    <div class="campo-info">
-
-                        <small>
-                            Nome completo
-                        </small>
-
-                        <strong>
-                            ${escaparHTML(
-                                paciente.nome ||
-                                "Não informado"
-                            )}
-                        </strong>
-
-                    </div>
-
-
-                    <div class="campo-info">
-
-                        <small>
-                            Documento
-                        </small>
-
-                        <strong>
-                            ${escaparHTML(
-                                paciente.documento ||
-                                paciente.cpf ||
-                                "Não informado"
-                            )}
-                        </strong>
-
-                    </div>
-
-
-                    <div class="campo-info">
-
-                        <small>
-                            Data de nascimento
-                        </small>
-
-                        <strong>
-                            ${formatarData(
-                                paciente.dataNascimento
-                            )}
-                        </strong>
-
-                    </div>
-
-
-                    <div class="campo-info">
-
-                        <small>
-                            Sexo
-                        </small>
-
-                        <strong>
-                            ${escaparHTML(
-                                paciente.sexo ||
-                                "Não informado"
-                            )}
-                        </strong>
-
-                    </div>
-
-
-                    <div class="campo-info">
-
-                        <small>
-                            Nome da mãe
-                        </small>
-
-                        <strong>
-                            ${escaparHTML(
-                                paciente.nomeMae ||
-                                "Não informado"
-                            )}
-                        </strong>
-
-                    </div>
-
-
-                    <div class="campo-info">
-
-                        <small>
-                            Estado civil
-                        </small>
-
-                        <strong>
-                            ${escaparHTML(
-                                paciente.estadoCivil ||
-                                "Não informado"
-                            )}
-                        </strong>
-
-                    </div>
-
-
-                    <div class="campo-info">
-
-                        <small>
-                            Endereço
-                        </small>
-
-                        <strong>
-                            ${escaparHTML(
-                                paciente.endereco ||
-                                "Não informado"
-                            )}
-                        </strong>
-
-                    </div>
-
-
-                    <div class="campo-info">
-
-                        <small>
-                            Telefone
-                        </small>
-
-                        <strong>
-                            ${escaparHTML(
-                                paciente.telefone ||
-                                "Não informado"
-                            )}
-                        </strong>
-
-                    </div>
-
-
-                    <div class="campo-info">
-
-                        <small>
-                            E-mail
-                        </small>
-
-                        <strong>
-                            ${escaparHTML(
-                                paciente.email ||
-                                "Não informado"
-                            )}
-                        </strong>
-
-                    </div>
-
-
-                    <div class="campo-info">
-
-                        <small>
-                            Contato de emergência
-                        </small>
-
-                        <strong>
-                            ${escaparHTML(
-                                paciente.contatoEmergencia ||
-                                "Não informado"
-                            )}
-                        </strong>
-
-                    </div>
-
-
-                    <div class="campo-info">
-
-                        <small>
-                            Telefone de emergência
-                        </small>
-
-                        <strong>
-                            ${escaparHTML(
-                                paciente.telefoneEmergencia ||
-                                "Não informado"
-                            )}
-                        </strong>
-
-                    </div>
-
-
-                    <div class="campo-info">
-
-                        <small>
-                            Tipo de atendimento
-                        </small>
-
-                        <strong>
-                            ${escaparHTML(
-                                paciente.tipo ||
-                                "Não informado"
-                            )}
-                        </strong>
-
-                    </div>
-
-                `;
-
-
-                box.style.display =
-                    "block";
-
-
-                /*
-                 * Limpar resultado anterior
-                 */
-
-                const resultado =
-                    document.getElementById(
-                        "resultado"
-                    );
-
-                resultado.className = "";
-
-                resultado.style.display =
-                    "none";
-
-                resultado.innerHTML = "";
-
-
-                /*
-                 * Rolar até o paciente
-                 */
-
-                box.scrollIntoView({
-                    behavior: "smooth",
-                    block: "start"
-                });
-
-            })
-
-            .catch(error => {
-
-                console.error(
-                    "Erro ao selecionar paciente:",
-                    error
-                );
-
-                alert(
-                    "Erro ao selecionar paciente."
-                );
-
-            });
-
-    }
-
-
-    /* ==========================================
-       CHAMAR NA TV
-    ========================================== */
-
-    function chamarNaTV(nome) {
-
-        fetch("/tv/chamar", {
-
-            method: "POST",
-
-            headers: {
-                "Content-Type":
-                    "application/json"
-            },
-
-            body: JSON.stringify({
-
-                localTipo: "GUICHÊ",
-
-                localNumero: "01",
-
-                paciente: nome
-
-            })
-
-        })
-
-        .then(response => {
-
-            if (!response.ok) {
-
-                throw new Error(
-                    "Erro HTTP " +
-                    response.status
-                );
-
+                return;
             }
 
-            return response.json();
+            div.innerHTML = "";
 
+            fila.forEach(paciente => {
+                const item = document.createElement("div");
+                item.className = "fila-item";
+
+                const nome = escaparHTML(
+                    paciente.nome || "Paciente sem nome"
+                );
+
+                item.innerHTML = `
+                    <div class="fila-topo">
+                        <div>
+                            <strong>${nome}</strong>
+                            <div class="status-triagem">
+                                🟡 Aguardando triagem
+                            </div>
+                        </div>
+
+                        <div class="fila-acoes">
+                            <button
+                                class="btn-atender"
+                                onclick="selecionarPaciente(${Number(paciente.id)})"
+                            >
+                                👤 Atender
+                            </button>
+
+                            <button
+                                class="btn-tv"
+                                onclick="chamarNaTV('${nome}')"
+                            >
+                                📺 Chamar na TV
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="dados-paciente">
+                        ${criarDado("Documento", paciente.documento || paciente.cpf)}
+                        ${criarDado("Nascimento", formatarData(paciente.dataNascimento))}
+                        ${criarDado("Sexo", paciente.sexo)}
+                        ${criarDado("Nome da mãe", paciente.nomeMae)}
+                        ${criarDado("Estado civil", paciente.estadoCivil)}
+                        ${criarDado("Endereço", paciente.endereco)}
+                        ${criarDado("Telefone", paciente.telefone)}
+                        ${criarDado("E-mail", paciente.email)}
+                        ${criarDado("Contato de emergência", paciente.contatoEmergencia)}
+                        ${criarDado("Telefone emergência", paciente.telefoneEmergencia)}
+                        ${criarDado("Tipo de atendimento", paciente.tipo)}
+                    </div>
+                `;
+
+                div.appendChild(item);
+            });
         })
-
-        .then(() => {
-
-            alert(
-                `✅ ${nome} foi chamado na TV para o Guichê 01!`
-            );
-
-        })
-
         .catch(error => {
+            console.error("Erro ao carregar pacientes:", error);
 
-            console.error(
-                "Erro ao chamar paciente na TV:",
-                error
-            );
-
-            alert(
-                "❌ Não foi possível chamar o paciente na TV."
-            );
-
+            div.innerHTML = `
+                <div style="background:#f8d7da;color:#721c24;padding:15px;border-radius:6px;text-align:center;">
+                    <strong>❌ Erro ao carregar pacientes</strong><br><br>
+                    ${escaparHTML(error.message)}
+                </div>
+            `;
         });
+}
 
+function criarDado(label, valor) {
+    return `
+        <div class="dado">
+            <b>${label}:</b>
+            ${escaparHTML(valor || "Não informado")}
+        </div>
+    `;
+}
+
+function criarCampoInfo(label, valor) {
+    return `
+        <div class="campo-info">
+            <small>${label}</small>
+            <strong>${escaparHTML(valor || "Não informado")}</strong>
+        </div>
+    `;
+}
+
+function selecionarPaciente(id) {
+    fetch("/pacientes")
+        .then(response => {
+            if (!response.ok) throw new Error(`Erro HTTP ${response.status}`);
+            return response.json();
+        })
+        .then(pacientes => {
+            const paciente = pacientes.find(
+                p => Number(p.id) === Number(id)
+            );
+
+            if (!paciente) {
+                alert("Paciente não encontrado.");
+                return;
+            }
+
+            pacienteSelecionado = paciente;
+
+            $("nome").value = paciente.nome || "";
+            $("alergia").value = paciente.alergia || "";
+
+            $("informacoes-paciente").innerHTML = `
+                ${criarCampoInfo("Nome completo", paciente.nome)}
+                ${criarCampoInfo("Documento", paciente.documento || paciente.cpf)}
+                ${criarCampoInfo("Data de nascimento", formatarData(paciente.dataNascimento))}
+                ${criarCampoInfo("Sexo", paciente.sexo)}
+                ${criarCampoInfo("Nome da mãe", paciente.nomeMae)}
+                ${criarCampoInfo("Estado civil", paciente.estadoCivil)}
+                ${criarCampoInfo("Endereço", paciente.endereco)}
+                ${criarCampoInfo("Telefone", paciente.telefone)}
+                ${criarCampoInfo("E-mail", paciente.email)}
+                ${criarCampoInfo("Contato de emergência", paciente.contatoEmergencia)}
+                ${criarCampoInfo("Telefone de emergência", paciente.telefoneEmergencia)}
+                ${criarCampoInfo("Tipo de atendimento", paciente.tipo)}
+            `;
+
+            $("dados-selecionados").style.display = "block";
+
+            $("resultado").className = "";
+            $("resultado").style.display = "none";
+            $("resultado").innerHTML = "";
+
+            $("dados-selecionados").scrollIntoView({
+                behavior: "smooth",
+                block: "start"
+            });
+        })
+        .catch(error => {
+            console.error("Erro ao selecionar paciente:", error);
+            alert("Erro ao selecionar paciente.");
+        });
+}
+
+function chamarNaTV(nome) {
+    fetch("/tv/chamar", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+            localTipo: "GUICHÊ",
+            localNumero: "01",
+            paciente: nome
+        })
+    })
+    .then(response => {
+        if (!response.ok) throw new Error(`Erro HTTP ${response.status}`);
+        return response.json();
+    })
+    .then(() => {
+        alert(`✅ ${nome} foi chamado na TV para o Guichê 01!`);
+    })
+    .catch(error => {
+        console.error("Erro ao chamar paciente na TV:", error);
+        alert("❌ Não foi possível chamar o paciente na TV.");
+    });
+}
+
+function classificarRisco(sintoma, temperatura) {
+    const vermelhos = [
+        "infarto",
+        "avc",
+        "convulsao",
+        "hemorragia",
+        "falta_ar_grave"
+    ];
+
+    const amarelos = [
+        "febre",
+        "vomito",
+        "diarreia",
+        "falta_ar_moderada"
+    ];
+
+    if (temperatura >= 39 || vermelhos.includes(sintoma)) {
+        return "vermelho";
     }
 
+    if (temperatura >= 38 || amarelos.includes(sintoma)) {
+        return "amarelo";
+    }
 
-    /* ==========================================
-       CLASSIFICAR RISCO
-    ========================================== */
+    return "verde";
+}
 
-    function classificarRisco(
+function salvar() {
+    if (!pacienteSelecionado) {
+        alert("Primeiro selecione um paciente da fila.");
+        return;
+    }
+
+    const sintoma = $("sintoma").value;
+    const temperaturaTexto = $("temp").value;
+    const alergia = $("alergia").value;
+    const observacao = $("observacao").value;
+
+    if (!sintoma) {
+        alert("Selecione o sintoma do paciente.");
+        return;
+    }
+
+    if (temperaturaTexto === "") {
+        alert("Informe a temperatura do paciente.");
+        return;
+    }
+
+    const temperatura = Number(temperaturaTexto);
+
+    if (isNaN(temperatura)) {
+        alert("Informe uma temperatura válida.");
+        return;
+    }
+
+    const risco = classificarRisco(sintoma, temperatura);
+
+    const dados = {
+        pacienteId: pacienteSelecionado.id,
+        nome: pacienteSelecionado.nome,
+        documento: pacienteSelecionado.documento || pacienteSelecionado.cpf || null,
+        cpf: pacienteSelecionado.cpf || pacienteSelecionado.documento || null,
+        dataNascimento: pacienteSelecionado.dataNascimento,
+        sexo: pacienteSelecionado.sexo,
+        nomeMae: pacienteSelecionado.nomeMae,
+        estadoCivil: pacienteSelecionado.estadoCivil,
+        endereco: pacienteSelecionado.endereco,
+        telefone: pacienteSelecionado.telefone,
+        email: pacienteSelecionado.email,
+        contatoEmergencia: pacienteSelecionado.contatoEmergencia,
+        telefoneEmergencia: pacienteSelecionado.telefoneEmergencia,
+        tipo: pacienteSelecionado.tipo,
         sintoma,
-        temperatura
-    ) {
-
-        const vermelhos = [
-
-            "infarto",
-            "avc",
-            "convulsao",
-            "hemorragia",
-            "falta_ar_grave"
-
-        ];
-
-
-        const amarelos = [
-
-            "febre",
-            "vomito",
-            "diarreia",
-            "falta_ar_moderada"
-
-        ];
-
-
-        /*
-         * Temperatura >= 39
-         * sempre vermelho
-         */
-
-        if (temperatura >= 39) {
-
-            return "vermelho";
-
-        }
-
-
-        /*
-         * Sintomas de emergência
-         */
-
-        if (vermelhos.includes(sintoma)) {
-
-            return "vermelho";
-
-        }
-
-
-        /*
-         * Temperatura >= 38
-         */
-
-        if (temperatura >= 38) {
-
-            return "amarelo";
-
-        }
-
-
-        /*
-         * Sintomas amarelos
-         */
-
-        if (amarelos.includes(sintoma)) {
-
-            return "amarelo";
-
-        }
-
-
-        return "verde";
-
-    }
-
-
-    /* ==========================================
-       SALVAR TRIAGEM
-    ========================================== */
-
-    function salvar() {
-
-        /*
-         * Verificar paciente
-         */
-
-        if (!pacienteSelecionado) {
-
-            alert(
-                "Primeiro selecione um paciente da fila."
-            );
-
-            return;
-
-        }
-
-
-        const nome =
-            document.getElementById(
-                "nome"
-            ).value;
-
-
-        const sintoma =
-            document.getElementById(
-                "sintoma"
-            ).value;
-
-
-        const temperaturaTexto =
-            document.getElementById(
-                "temp"
-            ).value;
-
-
-        const alergia =
-            document.getElementById(
-                "alergia"
-            ).value;
-
-
-        const observacao =
-            document.getElementById(
-                "observacao"
-            ).value;
-
-
-        /*
-         * Validar sintoma
-         */
-
-        if (!sintoma) {
-
-            alert(
-                "Selecione o sintoma do paciente."
-            );
-
-            return;
-
-        }
-
-
-        /*
-         * Validar temperatura
-         */
-
-        if (
-            temperaturaTexto === "" ||
-            temperaturaTexto === null
-        ) {
-
-            alert(
-                "Informe a temperatura do paciente."
-            );
-
-            return;
-
-        }
-
-
-        const temperatura =
-            Number(temperaturaTexto);
-
-
-        if (isNaN(temperatura)) {
-
-            alert(
-                "Informe uma temperatura válida."
-            );
-
-            return;
-
-        }
-
-
-        /*
-         * Classificar risco
-         */
-
-        const risco =
-            classificarRisco(
-                sintoma,
-                temperatura
-            );
-
-
-        /*
-         * Enviar para API
-         */
-
-        fetch("/triagem", {
-
-            method: "POST",
-
-            headers: {
-
-                "Content-Type":
-                    "application/json"
-
-            },
-
-            body: JSON.stringify({
-
-                pacienteId:
-                    pacienteSelecionado.id,
-
-                nome:
-                    pacienteSelecionado.nome,
-
-                documento:
-                    pacienteSelecionado.documento ||
-                    pacienteSelecionado.cpf ||
-                    null,
-
-                cpf:
-                    pacienteSelecionado.cpf ||
-                    pacienteSelecionado.documento ||
-                    null,
-
-                dataNascimento:
-                    pacienteSelecionado.dataNascimento,
-
-                sexo:
-                    pacienteSelecionado.sexo,
-
-                nomeMae:
-                    pacienteSelecionado.nomeMae,
-
-                estadoCivil:
-                    pacienteSelecionado.estadoCivil,
-
-                endereco:
-                    pacienteSelecionado.endereco,
-
-                telefone:
-                    pacienteSelecionado.telefone,
-
-                email:
-                    pacienteSelecionado.email,
-
-                contatoEmergencia:
-                    pacienteSelecionado.contatoEmergencia,
-
-                telefoneEmergencia:
-                    pacienteSelecionado.telefoneEmergencia,
-
-                tipo:
-                    pacienteSelecionado.tipo,
-
-                sintoma:
-                    sintoma,
-
-                temperatura:
-                    temperatura,
-
-                alergia:
-                    alergia,
-
-                observacao:
-                    observacao,
-
-                risco:
-                    risco
-
-            })
-
-        })
-
-        .then(response => {
-
-            if (!response.ok) {
-
-                throw new Error(
-                    "Erro HTTP " +
-                    response.status
-                );
-
-            }
-
-            return response.json();
-
-        })
-
-        .then(data => {
-
-            console.log(
-                "Triagem salva:",
-                data
-            );
-
-
-            /*
-             * Mostrar resultado
-             */
-
-            const resultado =
-                document.getElementById(
-                    "resultado"
-                );
-
-
-            resultado.className =
-                risco;
-
-
-            resultado.style.display =
-                "block";
-
-
-            resultado.innerHTML =
-                "Classificação: " +
-                risco.toUpperCase();
-
-
-            /*
-             * Mensagem
-             */
-
-            alert(
-                "✅ Triagem salva com sucesso!"
-            );
-
-
-            /*
-             * Limpar formulário
-             */
-
-            document.getElementById(
-                "sintoma"
-            ).value = "";
-
-
-            document.getElementById(
-                "temp"
-            ).value = "";
-
-
-            document.getElementById(
-                "alergia"
-            ).value = "";
-
-
-            document.getElementById(
-                "observacao"
-            ).value = "";
-
-
-            /*
-             * Esconder paciente selecionado
-             */
-
-            document.getElementById(
-                "dados-selecionados"
-            ).style.display =
-                "none";
-
-
-            /*
-             * Limpar nome
-             */
-
-            document.getElementById(
-                "nome"
-            ).value = "";
-
-
-            /*
-             * Limpar paciente selecionado
-             */
-
-            pacienteSelecionado =
-                null;
-
-
-            /*
-             * Atualizar fila.
-             *
-             * O backend mudou o status do paciente
-             * de "triagem" para "aguardando_medico".
-             *
-             * Portanto ele desaparecerá da fila.
-             */
-
-            carregarPacientes();
-
-        })
-
-        .catch(error => {
-
-            console.error(
-                "Erro ao salvar triagem:",
-                error
-            );
-
-            alert(
-                "❌ Não foi possível salvar a triagem.\n\n" +
-                error.message
-            );
-
-        });
-
-    }
-
-
-    /* ==========================================
-       INICIALIZAÇÃO
-    ========================================== */
-
-    carregarPacientes();
-
-
-    /*
-     * Atualizar automaticamente
-     * a cada 10 segundos.
-     */
-
-    setInterval(
-        carregarPacientes,
-        10000
-    );
-
+        temperatura,
+        alergia,
+        observacao,
+        risco
+    };
+
+    fetch("/triagem", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(dados)
+    })
+    .then(response => {
+        if (!response.ok) throw new Error(`Erro HTTP ${response.status}`);
+        return response.json();
+    })
+    .then(data => {
+        console.log("Triagem salva:", data);
+
+        const resultado = $("resultado");
+        resultado.className = risco;
+        resultado.style.display = "block";
+        resultado.textContent = `Classificação: ${risco.toUpperCase()}`;
+
+        alert("✅ Triagem salva com sucesso!");
+
+        $("sintoma").value = "";
+        $("temp").value = "";
+        $("alergia").value = "";
+        $("observacao").value = "";
+        $("nome").value = "";
+
+        $("dados-selecionados").style.display = "none";
+
+        pacienteSelecionado = null;
+
+        carregarPacientes();
+    })
+    .catch(error => {
+        console.error("Erro ao salvar triagem:", error);
+        alert(
+            "❌ Não foi possível salvar a triagem.\n\n" +
+            error.message
+        );
+    });
+}
+
+carregarPacientes();
+setInterval(carregarPacientes, 10000);
 </script>
-
 </body>
 </html>
