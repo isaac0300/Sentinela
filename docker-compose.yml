@@ -6,7 +6,7 @@ services:
     ports:
       - "3000:3002"
     volumes:
-      - dados_painel:/app/backend/data
+      - dados_hospital:/app/backend/data
  
 volumes:
  
