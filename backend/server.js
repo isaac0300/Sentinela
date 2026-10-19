@@ -25,7 +25,7 @@ function readDB() {
       leitos: [],
       tv_chamada: null,
       tv_historico: []
-    };
+    }; 
   }
 
   const db = JSON.parse(
