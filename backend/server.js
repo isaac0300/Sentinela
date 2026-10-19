@@ -169,6 +169,57 @@ app.get("/triagens", (req, res) => {
   res.json(db.triagens);
 });
 
+function sugerirRisco() {
+    const sintoma = $("sintoma").value;
+    const temperaturaTexto = $("temp").value;
+    const observacao = $("observacao").value;
+    const resultado = $("sugestao-risco");
+
+    if (!sintoma || temperaturaTexto === "") {
+        resultado.style.display = "none";
+        resultado.innerHTML = "";
+        return;
+    }
+
+    const temperatura = Number(temperaturaTexto);
+
+    if (!Number.isFinite(temperatura) || temperatura < 25 || temperatura > 45) {
+        resultado.style.display = "block";
+        resultado.style.background = "#fff3cd";
+        resultado.style.color = "#856404";
+        resultado.textContent = "Confira a temperatura informada.";
+        return;
+    }
+
+    const sugestao = classificarRisco(sintoma, temperatura, observacao);
+    const cores = {
+        vermelho: { fundo: "#f8d7da", texto: "#721c24" },
+        amarelo: { fundo: "#fff3cd", texto: "#856404" },
+        verde: { fundo: "#d4edda", texto: "#155724" }
+    };
+
+    resultado.style.display = "block";
+    resultado.style.background = cores[sugestao.risco].fundo;
+    resultado.style.color = cores[sugestao.risco].texto;
+    resultado.innerHTML = "";
+
+    const titulo = document.createElement("strong");
+    titulo.textContent = `Sugestão simulada: ${sugestao.risco.toUpperCase()}`;
+
+    const explicacao = document.createElement("p");
+    explicacao.textContent = sugestao.justificativa;
+    explicacao.style.marginBottom = "8px";
+
+    const aviso = document.createElement("small");
+    aviso.textContent = "Confirme ou corrija a classificação após avaliação profissional.";
+
+    resultado.append(titulo, explicacao, aviso);
+}
+
+$("sintoma").addEventListener("change", sugerirRisco);
+$("temp").addEventListener("input", sugerirRisco);
+$("observacao").addEventListener("input", sugerirRisco);
+
 // ==================== TV ====================
 
 app.post("/tv/chamar", (req, res) => {
