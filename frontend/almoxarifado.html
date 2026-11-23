@@ -5,7 +5,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-    <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
@@ -253,7 +252,50 @@ function setTab(tab) {
 }
 
 //CARREGAR ESTOQUE
+function carregarEstoque() {
+    fetch("/estoque")
+    .then(r => r.json())
+    .then(data =>{
+        estoqueGlobal = data;
+        atualizarStats(data);
+        renderizarFiltros(data);
+        renderizarTabela(data);
+        verificarAlerta(data);
+    })
+    .catch(() => showToast("Erro ao carregar estoque.", "error"));
+}
 
+//stats
+function atualizarStats(data) {
+    document.getElementById("statItens").textContent = data.length;
+    document.getElementById("statOk").textContent = data.filter(m => m.quantidade > 10).length;
+    document.getElementById("statBaixo").textContent = data.filter(m => m.quantidade > 0 && m.quantidade <= 10).length
+    document.getElementById("statZerado").textContent = data.filter(m => m.quantidade === 0).length;
+}
+
+function verificarAlerta(data) {
+    const baixos = data.filter(m => m.quantidade > 0 && m.quantidade)
+    const zerados = data.filter(m => m.quantidade === 0);
+    const el = document.getElementById("alertaEstoque");
+    const msgs = [];
+    if (zerados.length) msgs.push(`${zerados.length} medicamento(s) zerado(s): ${zerados.map(m.nome).join(",")}`);
+    if (baixos.length) msgs.push(`${baixos.length} com estoque baixo`);
+    if (msgs.length) {
+        document.getElementById("alertaTexto").textContent = msgs.join(' | ') + " -- repor com urgencia!";
+        el.style.display = "flex";
+    } else {
+        el.style.display = "none";
+    }
+}
+
+//FILTROS
+function renderizarFiltros(data){
+    const cats = [...new Set(data.map(m.categoria).filter(Boolean))];
+    const el = document.getElementById("filterChips");
+     el.innerHTML = `<span class="chip ${filtroAtivo === 'todos' ? 'active' : ''} "onclick = "setFiltro('todos', this)">TODOS</span>`;
+}
+
+function setFiltro(cat, el) {}
     </script>
 </body>
 
